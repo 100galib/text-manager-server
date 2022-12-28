@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const port = process.env.PORT || 5000;
 require('dotenv').config()
 
@@ -22,6 +22,38 @@ const run = async() => {
             const tasks = req.body;
             const alltaskinsert = await alltask.insertOne(tasks);
             res.send(alltaskinsert);
+        })
+        app.get('/allTask', async(req, res) => {
+            const email = req.query.email;
+            const query = {email: email};
+            const alltasks = await alltask.find(query).toArray();
+            res.send(alltasks);
+        })
+        app.get('/allTask/:id', async(req, res) => {
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)};
+            const service = await alltask.find(query).toArray();
+            res.send(service);
+        })
+
+        app.put('/allTask/:id', async(req, res) => {
+            const id = req.params.id;
+            const filter = {_id: ObjectId(id)};
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                    complete: true
+                }
+            }
+            const result = await alltask.updateOne(filter, updateDoc, options);
+            res.send(result);
+        })
+
+        app.delete('/allTask/:id', async(req, res) => {
+            const id = req.params.id;
+            const filter = {_id: ObjectId(id)};
+            const result = await alltask.deleteOne(filter);
+            res.send(result)
         })
 
     }
