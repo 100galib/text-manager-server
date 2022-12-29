@@ -54,6 +54,31 @@ const run = async() => {
             const result = await alltask.updateOne(filter, updateDoc, options);
             res.send(result);
         })
+        app.put('/allTask/:id', async(req, res) => {
+            const id = req.params.id;
+            const filter = {_id: ObjectId(id)};
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                    complete: false
+                }
+            }
+            const result = await alltask.updateOne(filter, updateDoc, options);
+            res.send(result);
+        })
+        app.put("/allTask/:id", async (req, res) => {
+            const id = req.params.id;
+            const updatedtask = req.body;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updatedDoc = {
+              $set: {
+                taskData: updatedtask.taskData,
+              },
+            };
+            const result = await alltask.updateOne(filter,updatedDoc,options);
+            res.send(result);
+          });
 
         app.delete('/allTask/:id', async(req, res) => {
             const id = req.params.id;
