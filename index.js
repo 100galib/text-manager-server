@@ -24,6 +24,12 @@ const run = async() => {
             res.send(alltaskinsert);
         })
         app.get('/allTask', async(req, res) => {
+            const task = req.query.task;
+            const query = {task: task};
+            const alltasks = await alltask.find(query).toArray();
+            res.send(alltasks);
+        })
+        app.get('/allTask', async(req, res) => {
             const email = req.query.email;
             const query = {email: email};
             const alltasks = await alltask.find(query).toArray();
